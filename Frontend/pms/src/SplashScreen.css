@@ -1,6 +1,6 @@
 /* SplashScreen.css */
 .splash-logo {
-  width: 120px;
+  width: 300px;
   height: auto;
   animation: zoomIn 1s ease-in-out;
 }

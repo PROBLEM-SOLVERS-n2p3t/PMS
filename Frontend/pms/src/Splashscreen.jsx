@@ -5,11 +5,11 @@ import './SplashScreen.css'; // Optional animations
 const SplashScreen = () => {
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-white">
-      <img src="/problem_solvers_logo.png" alt="Group Logo" className="mb-4 splash-logo" />
-      <div className="spinner-border text-primary" role="status">
+      <img src="/logo.jpg" alt="Group Logo" className="mb-4 splash-logo" />
+      <div className="spinner-border text-warning" role="status">
         <span className="visually-hidden">Loading...</span>
       </div>
-      <p className="mt-3 text-secondary">Getting things ready...</p>
+      <p className="mt-3 text-warning">Getting things ready...</p>
     </div>
   );
 };
