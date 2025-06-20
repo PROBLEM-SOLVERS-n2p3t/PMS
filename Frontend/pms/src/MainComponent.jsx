@@ -1,7 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const MainComponent = () => { 
-  
+  const navigate = useNavigate();
   return ( <div className="container mt-5"> <h1 className="text-center fw-bold text-danger text-decoration-underline mb-4"> Welcome to RESTOCK ALERT </h1> <p className="text-center fw-bold text-success text-decoration-underline mb-5"> This is your smart inventory dashboard. </p>
 
 
@@ -11,7 +12,7 @@ const MainComponent = () => {
         <div className="card-body">
           <h5 className="card-title">Product List</h5>
           <p className="card-text">View and manage all the available products sorted by expiry.</p>
-          <button className="btn btn-primary" >View</button>
+          <button onClick={() => navigate('/ProductList')}  className="btn btn-primary" >View</button>
         </div>
       </div>
     </div>
@@ -21,7 +22,7 @@ const MainComponent = () => {
         <div className="card-body">
           <h5 className="card-title">Add Product</h5>
           <p className="card-text">Add a new product with details like name, rack number, and expiry date.</p>
-          <button className="btn btn-primary">Go</button>
+          <button onClick={() => navigate('/AddProduct')} className="btn btn-primary">Go</button>
         </div>
       </div>
     </div>
@@ -31,7 +32,7 @@ const MainComponent = () => {
         <div className="card-body">
           <h5 className="card-title">Edit Product</h5>
           <p className="card-text">Update product information like rack or expiry date.</p>
-          <button className="btn btn-secondary">Edit</button>
+          <button onClick={() => navigate('/EditProduct')} className="btn btn-secondary">Edit</button>
         </div>
       </div>
     </div>
@@ -41,7 +42,17 @@ const MainComponent = () => {
         <div className="card-body">
           <h5 className="card-title">Notifications</h5>
           <p className="card-text">Get alerts when racks are low on stock or nearing expiry.</p>
-          <button className="btn btn-warning">Check</button>
+          <button onClick={() => navigate('/Notifications')} className="btn btn-warning">Check</button>
+        </div>
+      </div>
+    </div>
+
+    <div className="col">
+      <div className="card h-100 shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title">About refigerator</h5>
+          <p className="card-text">To view the temperature of the refigerator</p>
+          <button onClick={() => navigate('/AboutRefrigerator')} className="btn btn-primary">View</button>
         </div>
       </div>
     </div>
@@ -51,7 +62,7 @@ const MainComponent = () => {
         <div className="card-body">
           <h5 className="card-title">Settings</h5>
           <p className="card-text">Customize your dashboard preferences and notification options.</p>
-          <button className="btn btn-dark">Settings</button>
+          <button onClick={() => navigate('/Settings')} className="btn btn-dark">Settings</button>
         </div>
       </div>
     </div>
