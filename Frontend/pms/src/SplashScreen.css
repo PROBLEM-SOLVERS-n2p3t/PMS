@@ -1,17 +1,68 @@
 /* SplashScreen.css */
-.splash-logo {
-  width: 300px;
-  height: auto;
-  animation: zoomIn 1s ease-in-out;
+
+/* Animated light background */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
-@keyframes zoomIn {
-  0% {
-    transform: scale(0.7);
-    opacity: 0;
+.vh-100 {
+  height: 100vh;
+}
+
+.bg-white {
+  background: linear-gradient(-45deg, #fffbea, #fff6d1, #ffefb1, #fffce2);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+}
+
+/* Glow animation for logo */
+.splash-logo {
+  width: 180px;
+  animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  from {
+    filter: drop-shadow(0 0 10px #f7c600);
   }
-  100% {
-    transform: scale(1);
-    opacity: 1;
+  to {
+    filter: drop-shadow(0 0 25px #f7c600);
   }
+}
+
+/* Spinner customization */
+.spinner-border.text-info {
+  border-color: #f7c600 #f7c600 #f7c600 transparent;
+}
+
+/* Typewriter animation */
+.text-info {
+  color: #f7c600 !important;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #f7c600;
+  animation: typing 3s steps(30, end), blink 0.75s step-end infinite;
+  width: 0;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 250px }
+}
+
+@keyframes blink {
+  from, to { border-color: transparent }
+  50% { border-color: #f7c600 }
+}
+
+/* Background animation */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 const PORT = 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -13,55 +14,71 @@ mongoose.connect('mongodb://127.0.0.1:27017/productsdb', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('MongoDB Connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+.then(() => console.log('✅ MongoDB Connected'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Schema
+/* ---------------------------------
+   Product Schema & Routes
+--------------------------------- */
 const ProductSchema = new mongoose.Schema({
   name: String,
   rack: String,
   expiry: String,
   weight: Number,
 });
-
 const Product = mongoose.model('Product', ProductSchema);
 
-// Routes
+// Get all products
 app.get('/products', async (req, res) => {
   const products = await Product.find().sort({ expiry: 1 });
   res.json(products);
 });
+
+// Add product
 app.post('/add-product', async (req, res) => {
   const { name, rack, expiry } = req.body;
-  console.log('Received Add Product:', req.body); // 👈 Add this line
-
   try {
     const newProduct = new Product({ name, rack, expiry });
     await newProduct.save();
-    res.status(201).json({ message: "Product added successfully" });
+    res.status(201).json({ message: "✅ Product added successfully" });
   } catch (error) {
-    console.error('Error adding product:', error); // 👈 Add for debugging
+    console.error('❌ Error adding product:', error);
     res.status(500).json({ error: "Error adding product" });
   }
 });
-// PUT route for update
+
+app.get('/get-weight/:rack', async (req, res) => {
+  const { rack } = req.params;
+
+  try {
+    // Simulate DB fetch or sensor data
+    const weightData = await Product.findOne({ rack });
+    if (!weightData) return res.status(404).json({ weight: null });
+
+    res.json({ weight: weightData.weight });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error fetching weight' });
+  }
+});
+
+// Update product
 app.put('/update-product/:id', async (req, res) => {
   const { name, rack, expiry } = req.body;
   try {
     await Product.findByIdAndUpdate(req.params.id, { name, rack, expiry });
-    res.json({ message: 'Product updated' });
+    res.json({ message: '✅ Product updated' });
   } catch (err) {
-    res.status(500).json({ error: 'Update failed' });
+    res.status(500).json({ error: '❌ Update failed' });
   }
 });
 
-// DELETE route for deletion
+// Delete product
 app.delete('/delete-product/:id', async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Product deleted' });
+    res.json({ message: '✅ Product deleted' });
   } catch (err) {
-    res.status(500).json({ error: 'Delete failed' });
+    res.status(500).json({ error: '❌ Delete failed' });
   }
 });
 
@@ -69,15 +86,74 @@ app.delete('/delete-product/:id', async (req, res) => {
 app.post('/update-weight', async (req, res) => {
   const { rack, weight } = req.body;
   try {
-    await Product.updateMany({ rack }, { weight }); // or use findOne for a single product
+    await Product.updateMany({ rack }, { weight });
     res.json({ message: "✅ Weight updated" });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "❌ Failed to update weight" });
   }
 });
 
-// Start server
+// Get near expiry notifications
+app.get('/notifications/expiry', async (req, res) => {
+  const today = new Date();
+  const threeDaysLater = new Date();
+  threeDaysLater.setDate(today.getDate() + 3);
+
+  try {
+    const nearExpiryProducts = await Product.find({
+      expiry: {
+        $gte: today.toISOString().split('T')[0],
+        $lte: threeDaysLater.toISOString().split('T')[0],
+      }
+    });
+    res.json(nearExpiryProducts);
+  } catch (error) {
+    res.status(500).json({ error: "❌ Error fetching near expiry products" });
+  }
+});
+
+/* ---------------------------------
+   Settings Schema & Routes
+--------------------------------- */
+const SettingsSchema = new mongoose.Schema({
+  notifyExpiry: { type: Boolean, default: true },
+  notifyStock: { type: Boolean, default: true },
+  theme: { type: String, default: 'Light' },
+});
+const Setting = mongoose.model('Setting', SettingsSchema);
+
+// Get settings
+app.get('/settings', async (req, res) => {
+  try {
+    const settings = await Setting.findOne();
+    res.json(settings);
+  } catch (err) {
+    console.error('❌ Error fetching settings:', err);
+    res.status(500).json({ error: 'Error fetching settings' });
+  }
+});
+
+// Save/update settings
+app.post('/settings', async (req, res) => {
+  const { notifyExpiry, notifyStock, theme } = req.body;
+  try {
+    let settings = await Setting.findOne();
+    if (!settings) {
+      settings = new Setting({ notifyExpiry, notifyStock, theme });
+    } else {
+      settings.notifyExpiry = notifyExpiry;
+      settings.notifyStock = notifyStock;
+      settings.theme = theme;
+    }
+    await settings.save();
+    res.status(200).json({ message: '✅ Settings updated successfully' });
+  } catch (error) {
+    console.error('❌ Error saving settings:', error);
+    res.status(500).json({ error: 'Failed to save settings' });
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
