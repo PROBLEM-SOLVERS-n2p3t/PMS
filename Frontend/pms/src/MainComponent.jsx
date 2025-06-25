@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Typewriter from 'typewriter-effect';
-import { Howl } from 'howler';
-import logo from './assets/logo.jpg'; // Ensure logo.jpg is in correct path
+import logo from './assets/logo.jpg';
+import './MainComponent.css';
 
 const MainComponent = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-
-  const sound = new Howl({
-    src: ['/click-sound.mp3'], // File should be in /public
-  });
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -37,12 +32,6 @@ const MainComponent = () => {
     { title: "Settings", text: "Customize your dashboard preferences and notification options.", button: "Settings", class: "btn btn-dark", route: "/Settings" },
   ];
 
-  const handleLogoClick = () => {
-    sound.play();
-    setShowModal(true);
-  };
-
-  // Generate floating circles
   const floatingCircles = Array.from({ length: 20 }, (_, i) => (
     <motion.div
       key={i}
@@ -74,7 +63,7 @@ const MainComponent = () => {
 
   return (
     <div style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Animated Gradient Background */}
+      {/* Background Gradient */}
       <motion.div
         initial={{ backgroundPosition: '0% 50%' }}
         animate={{ backgroundPosition: '100% 50%' }}
@@ -91,14 +80,14 @@ const MainComponent = () => {
         }}
       />
 
-      {/* Floating particles */}
+      {/* Floating Circles */}
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }}>
         {floatingCircles}
       </div>
 
       {/* Logo */}
       <div
-        onClick={handleLogoClick}
+        onClick={() => setShowModal(true)}
         style={{
           position: 'absolute',
           top: 20,
@@ -110,28 +99,22 @@ const MainComponent = () => {
         <img src={logo} alt="Team Logo" style={{ width: 60, borderRadius: '50%' }} />
       </div>
 
-      {/* Heading */}
+      {/* Zoom In/Out Heading (NO glow) */}
       <motion.h1
-        className="text-center fw-bold text-danger text-decoration-underline mb-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        className="text-center mb-4"
+        style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#222' }}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: [0, 1.2, 1], opacity: [0, 1, 1] }}
+        transition={{ duration: 1.5, ease: 'easeInOut' }}
       >
-        <Typewriter
-          options={{
-            strings: ['Welcome to RESTOCK ALERT'],
-            autoStart: true,
-            loop: true,
-            delay: 75,
-          }}
-        />
+        Welcome to RESTOCK ALERT
       </motion.h1>
 
       <motion.p
         className="text-center fw-bold text-success text-decoration-underline mb-5"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
+        transition={{ delay: 1.5, duration: 0.8 }}
       >
         This is your smart inventory dashboard.
       </motion.p>
@@ -179,11 +162,17 @@ const MainComponent = () => {
               onClick={(e) => e.stopPropagation()}
               variants={modalVariants}
             >
-              <h5 className="fw-bold text-center mb-3">Team Members</h5>
+              <h5 className="fw-bold text-center mb-3">PROBLEM SOLVERS</h5>
               <ul className="list-unstyled text-center">
-                <li>P.Nattar Raj</li>
+                <li><strong>Team Members</strong></li>
+                <li>P. Nattar Raj</li>
                 <li>S. Praveen Kumar</li>
                 <li>S. Thanisha</li>
+              </ul>
+              <h5 className="fw-bold  mb-3">About :</h5>
+              <ul className="list-unstyled">
+                <li>Smart supervisor for the supermarket</li>
+                <li className='text-end'>-By N2P3T</li>
               </ul>
               <div className="text-center mt-3">
                 <button className="btn btn-outline-danger" onClick={() => setShowModal(false)}>Close</button>
